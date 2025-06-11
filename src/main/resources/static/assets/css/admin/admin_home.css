@@ -1,0 +1,105 @@
+@charset "UTF-8";
+
+:root {
+	--sidebar-width: 250px;
+	--topbar-height: 60px;
+}
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f5f7fa;
+}
+
+.sidebar {
+	width: var(--sidebar-width);
+	height: 100vh;
+	position: fixed;
+	background: #2c3e50;
+	color: white;
+	transition: all 0.3s;
+}
+
+.main-content {
+	margin-left: var(--sidebar-width);
+	padding-top: var(--topbar-height);
+}
+
+.topbar {
+	height: var(--topbar-height);
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: var(--sidebar-width);
+	z-index: 1000;
+	background: white;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-menu {
+	list-style: none;
+	padding: 0;
+}
+
+.sidebar-menu li {
+	padding: 10px 15px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu li a {
+	color: white;
+	text-decoration: none;
+	display: block;
+}
+
+.sidebar-menu li.active {
+	background: #34495e;
+}
+
+.sidebar-menu li:hover {
+	background: #34495e;
+}
+
+.card-admin {
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+	border: none;
+	transition: transform 0.3s;
+}
+
+.card-admin:hover {
+	transform: translateY(-5px);
+}
+/* Hiển thị dropdown con khi hover */
+.dropdown-submenu:hover .dropdown-menu {
+    display: block;
+    margin-left: 100%; /* Hiển thị sang bên phải */
+    top: 0;
+}
+
+/* Đảm bảo dropdown không bị che khuất */
+.dropdown-menu {
+    position: relative;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+/* Giảm padding/margin cho dropdown con */
+.dropdown-submenu.no-whitespace .compact-menu {
+    padding: 0; /* Loại bỏ padding thừa */
+    margin: 0;  /* Loại bỏ margin thừa */
+    min-width: 200px; /* Đặt chiều rộng tối thiểu */
+}
+
+/* Điều chỉnh khoảng cách giữa các mục danh mục */
+.dropdown-submenu.no-whitespace .compact-menu .dropdown-item {
+    padding: 0.25rem 1.5rem; /* Giảm padding */
+    white-space: nowrap; /* Ngăn text xuống dòng */
+}
+
+/* Hiển thị submenu sát cạnh */
+.dropdown-submenu.no-whitespace:hover .compact-menu {
+    margin-left: 0; /* Bỏ lệch sang phải */
+    left: 100%;    /* Hiển thị sát mép */
+    top: -10px;    /* Căn chỉnh vị trí dọc */
+}
