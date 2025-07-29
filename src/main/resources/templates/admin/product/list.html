@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Product - Mooncake</title>
+<title>Product - Phan Lt</title>
 <!-- Bootstrap 5 CSS -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -16,54 +16,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
 	<!-- Sidebar -->
-	<div class="sidebar">
-		<div class="sidebar-header p-3 text-center">
-			<h4>
-				<i class="fas fa-moon me-2"></i> Admin
-			</h4>
-		</div>
-		<ul class="sidebar-menu">
-			<li class="active"><a href="#"><i
-					class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
-			<li><a th:href="@{/admin/product-list}"><i
-					class="fas fa-box me-2"></i> Quản lý sản phẩm</a></li>
-			<li><a href="#"><i class="fas fa-receipt me-2"></i> Đơn hàng</a>
-			</li>
-			<li><a href="#"><i class="fas fa-users me-2"></i> Khách hàng</a>
-			</li>
-			<li><a href="#"><i class="fas fa-chart-bar me-2"></i> Thống
-					kê</a></li>
-			<li><a href="#"><i class="fas fa-tags me-2"></i> Khuyến mãi</a>
-			</li>
-			<li><a href="#"><i class="fas fa-cog me-2"></i> Cài đặt</a></li>
-		</ul>
-	</div>
+	<div th:insert="admin/menu :: menuAdminShop"></div>
 
 	<div class="main-content">
 		<!-- Topbar -->
-		<nav class="topbar navbar navbar-expand px-3 py-2">
-			<div class="d-flex align-items-center">
-				<i class="fas fa-bars me-3" id="sidebarToggle"></i>
-				<h5 class="mb-0">Quản lý sản phẩm</h5>
-			</div>
-			<div class="navbar-nav ms-auto">
-				<div class="dropdown">
-					<a href="#" class="nav-link dropdown-toggle"
-						data-bs-toggle="dropdown"> <i class="fas fa-user-circle me-1"></i>
-						Admin
-					</a>
-					<ul class="dropdown-menu dropdown-menu-end">
-						<li><a class="dropdown-item" href="#"><i
-								class="fas fa-user me-2"></i> Profile</a></li>
-						<li><a class="dropdown-item" href="#"><i
-								class="fas fa-cog me-2"></i> Settings</a></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><a class="dropdown-item" href="#"><i
-								class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
+		<div th:insert="admin/header :: headerAdminShop"></div>
+		
 		<!-- Main Content -->
 		<div class="card-admin card">
 			<div class="card-body">
@@ -125,9 +83,15 @@
 					<div
 						class="card-header bg-white d-flex justify-content-between align-items-center">
 						<h5 class="mb-0"></h5>
-						<button class="btn btn-success btn-sm">
-							<i class="fas fa-plus me-1"></i> Thêm sản phẩm
-						</button>
+						<div class="d-flex justify-content-start gap-2 mb-3">
+							<a th:href="@{/admin/product-edit}"
+								class="btn btn-success btn-sm"> <i class="fas fa-plus me-1"></i>
+							</a>
+							<button class="btn btn-danger btn-sm" id="btnDeleteProducts">
+								<i class="fas fa-trash-alt me-1"></i>
+							</button>
+						</div>
+
 					</div>
 				</div>
 				
@@ -136,7 +100,8 @@
 					<table class="table table-hover">
 						<thead class="table-light">
 							<tr>
-								<th width="60">ID</th>
+								<th><input type="checkbox" id="checkAll" /></th>
+								<th width="60">STT</th>
 								<th width="100">Hình ảnh</th>
 								<th>Tên sản phẩm</th>
 								<th>Danh mục</th>
@@ -148,9 +113,10 @@
 							</tr>
 						</thead>
 						<tbody >
-							<tr th:each = "item : ${productList}">
-								<td th:text="${item.id}"></td>
-								<td><img class="product-img-thumbnail" alt="Bánh trung thu"></td>
+							<tr th:each = "item, ind : ${productList}">
+								<td><input type="checkbox" class="product-checkbox" th:value="${item.id}" /></td>
+								<td th:text="${ind.index + 1}"></td>
+								<td><img class="product-img-thumbnail" th:src="@{'/images/' + ${item.imageUrl}}" width="100px" height="100px"></td>
 								<td><a th:text="${item.name}"> </a></td>
 								<td th:text="${item.category}"></td>
 								<td th:text="${item.price}"><span class="fw-bold"> </span></td>
@@ -158,20 +124,24 @@
 								<td th:text="${item.stockQuantity}"></td>
 								<td th:text="${item.isFeatured}"><span></span></td>
 								<td>
-								    <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+								    <a th:href="@{'/admin/product-edit-' + ${item.id}}" class="btn btn-sm btn-outline-primary me-1">
+										<i class="fas fa-edit"></i>
+								    </a>
+                                    <a><button class="btn btn-sm btn-outline-danger" th:onclick="'modalDeleteProduct(' + ${item.id} + ')'"><i class="fas fa-trash"></i></button></a>
                                 </td>
 							</tr>
 						</tbody>
 					</table>
+					<input type="hidden" id="productId" name="productId"/>
 				</div>
 
 				<!-- Pagination -->
 				<nav aria-label="Page navigation" >
 					<ul class="pagination justify-content-center" >
-						<li class="page-item disabled"><a class="page-link" href="#"
-							tabindex="-1"><<</a></li>
-						<li class="page-item " th:each="pageNumber : ${totalPage}"><a class="page-link" th:text="${pageNumber}" th:href="@{'/admin/product-list/page-' + ${pageNumber}}"></a></li>
+						<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1"><<</a></li>
+						<li th:each="i : ${totalPage}" >
+							<a  th:text="${i + 1}"></a>
+						</li>
 						<!--<li class="page-item"><a class="page-link" href="#">2</a></li>-->
 						<!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
 						<li class="page-item"><a class="page-link" href="#">>></a></li>
@@ -190,17 +160,13 @@
 					<h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
 					<button type="button" class="btn-close btn-close-white"
 						data-bs-dismiss="modal" aria-label="Close"></button>
+				<input type="hidden" id="productId" name="productId"/>
 				</div>
 				<div class="modal-body">Bạn có chắc chắn muốn xóa sản phẩm
 					này? Hành động này không thể hoàn tác!</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Hủy</button>
-					<form 
-						method="post">
-						<input type="hidden" name="_method" value="delete">
-						<button type="submit" class="btn btn-danger">Xóa</button>
-					</form>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>					
+					<button type="button" class="btn btn-danger" id="btnDeleteProduct" >Xóa</button>
 				</div>
 			</div>
 		</div>
@@ -229,9 +195,66 @@
         $('#btnSearchProduct').click(function (e) {
         	e.preventDefault();
             $('#search').submit();
+        })     
+        
+		function modalDeleteProduct(productId) {
+			const modalElement = document.getElementById('deleteModal');
+			const deleteModal = new bootstrap.Modal(modalElement);
+			document.getElementById('productId').value = productId;
+			deleteModal.show();
+		}
+        //xóa từng sản phẩm
+        function deleteProduct(productId) {
+        	$.ajax({
+        		type: 'DELETE',
+        		url: "/admin/product/" + productId,
+        		data: JSON.stringify(productId),
+        		success: function(res) {
+        			alert("xóa thành công");
+        			location.reload();
+        		},
+        		error: function(res) {
+        			alert("xóa không thành công");
+        		}
+        	});
+        }
+        
+        $('#btnDeleteProduct').click(function(e){
+        	e.preventDefault();
+        	var productId = $('#productId').val();
+        	deleteProduct(productId);
+        })
+        //1 cho tất cả
+		$('#checkAll').on('change', function() {
+			$('.product-checkbox').prop('checked', this.checked);
+		});
+        
+        //xóa nhiều sản phẩm cùng lúc
+        $('#btnDeleteProducts').click(function(e){
+        	e.preventDefault();
+        	var ids = [];
+        	$('.product-checkbox:checked').each(function () {
+                ids.push($(this).val());
+            });
+        	deleteProducts(ids);
         })
         
-    </script>
+        function deleteProducts(ids){
+        	const queryString = ids.map(id => `ids=${id}`).join('&');
+        	$.ajax({
+        		type: 'DELETE',
+        		url: "/admin/product/" + ids,
+        		data: JSON.stringify(ids),
+        		success: function(res) {
+        			alert("xóa thành công");
+        			location.reload();
+        		},
+        		error: function(res) {
+        			alert("xóa không thành công");
+        		}
+        	});
+        }
+	</script>
 </body>
 
 </html>

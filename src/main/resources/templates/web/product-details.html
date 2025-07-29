@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bánh Trung Thu Thập Cẩm Đặc Biệt</title>
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link th:href="@{/assets/css/web/shop.css}" rel="stylesheet" />
+</head>
+<body>
+	<div th:insert="~{web/fragments/header :: headerShop}"></div>
+	<div class="container mt-5">
+		<div class="row" th:object="${productDetails}">
+			<!-- Ảnh sản phẩm -->
+			<div class="col-md-6">
+				<img th:src="@{'/images/' + ${productDetails.imageUrl}}"
+					class="img-fluid rounded shadow"
+					alt="Bánh trung thu thập cẩm đặc biệt">
+			</div>
+
+			<!-- Thông tin sản phẩm -->
+			<div class="col-md-6">
+				<h1 class="product-title" th:text="${productDetails.name}"></h1>
+				<p class="text-muted">
+					<i class="fas fa-tags me-2 text-primary"></i> <strong>Thương
+						hiệu:</strong> <span th:text="${productDetails.brand}">Brand</span>
+				</p>
+				<h4 class="text-danger">
+					Giá: <span th:text="${productDetails.price}"></span>
+				</h4>
+
+				<p>
+					<strong>Hương vị chính: </strong><span
+						th:text="${productDetails.flavor}"></span>
+				</p>
+				<p>
+					<strong>Khối lượng: </strong><span
+						th:text="${productDetails.weight} + 'g'"></span>
+				</p>
+				<p>
+					<strong>HSD:</strong> 30 ngày kể từ ngày sản xuất
+				</p>
+
+				<form method="GET" th:action="@{/cart}" th:object="${cart}" id="formAddToCart">
+					<div class="mb-3">
+						<label for="quantity" class="form-label">Số lượng:</label> <input
+							type="number" class="form-control w-25" id="quantity"
+							name="quantity" value="1" min="1">
+					</div>
+					
+					<input type="hidden" name="productId" id="productId" />
+					<input type="hidden" th:object="${userLogin}" name="userId" id="userId" />
+					<div class="d-flex gap-2">
+						<button type="submit" name="addCart" id="btnAddToCart"
+							class="btn btn-primary">
+							<i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ hàng
+						</button>
+
+						<button type="submit" name="" class="btn btn-danger">
+							<i class="fas fa-bolt me-1"></i> Mua ngay
+						</button>
+					</div>
+				</form>
+
+				<hr>
+
+				<h5>Mô tả sản phẩm</h5>
+				<p th:text="${productDetails.description}"></p>
+			</div>
+		</div>
+	</div>
+
+	<footer class="bg-dark text-white pt-5 pb-3"
+		th:insert="~{web/fragments/footer :: footerShop}"> </footer>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="js/jquery-3.7.1.min.js"></script>
+	
+	<script>
+		  function addProductToCart(formData) {
+			  $.ajax({
+				  url: "/add-to-cart",
+				  method: "POST",
+				  data: formData,
+				  processData: false, 
+				  contentType: false,
+				  success: function(res){
+					  alert("Thêm thành công vào giỏ hàng");
+				  },
+				  error: function(xhr){
+					  if (xhr.status === 302 || xhr.status === 403 || xhr.status === 401) {
+						 document.cookie = "PRE_LOGIN_URL=" + encodeURIComponent(window.location.href);
+						 window.location.href = "/login";
+					  } else {
+						alert("ERROR");
+					  }
+				  }
+			  })
+		  }
+		  $('#btnAddToCart').click(function(e){
+			  e.preventDefault();
+			  var data = {};	    	
+			  data['productId'] = $('#productId').val();
+			  data['userId'] = $('#userId').val();
+			  addProductToCart(data);
+		  })
+		  
+	</script>
+</body>
+</html>

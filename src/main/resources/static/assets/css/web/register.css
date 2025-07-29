@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+body {
+	background-color: #fff8e1; /* nền vàng nhạt */
+	font-family: 'Segoe UI', sans-serif;
+}
+
+.card {
+	border-radius: 1rem;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	background-color: #fff3cd; /* thẻ card vàng nhạt */
+	border: none;
+}
+
+.card h2 {
+	color: #8b4513; /* nâu đất */
+}
+
+.btn-primary {
+	background-color: #c08c3f; /* vàng nâu */
+	border-color: #c08c3f;
+}
+
+.btn-primary:hover {
+	background-color: #a46f2a;
+	border-color: #a46f2a;
+}
+
+a {
+	color: #a46f2a;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #8b5e22;
+	text-decoration: underline;
+}

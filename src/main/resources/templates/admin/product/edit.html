@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thêm Sản Phẩm - Admin</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Custom CSS (nếu có) -->
+<link th:href="@{/assets/css/admin/admin_home.css}" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+		<div class="sidebar-header p-3 text-center">
+			<h4>
+				<i class="fas fa-moon me-2"></i> Admin
+			</h4>
+		</div>
+		<ul class="sidebar-menu">
+			<li class="active"><a href="#"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
+			<li><a th:href="@{/admin/product-list}"><i class="fas fa-box me-2"></i> Quản lý sản phẩm</a></li>
+			<li><a href="#"><i class="fas fa-receipt me-2"></i> Đơn hàng</a></li>
+			<li><a href="#"><i class="fas fa-users me-2"></i> Khách hàng</a></li>
+			<li><a href="#"><i class="fas fa-chart-bar me-2"></i> Thống kê</a></li>
+			<li><a href="#"><i class="fas fa-tags me-2"></i> Khuyến mãi</a></li>
+			<li><a href="#"><i class="fas fa-cog me-2"></i> Cài đặt</a></li>
+		</ul>
+	</div>
+
+	<div class="main-content">
+		<!-- Topbar -->
+		<nav class="topbar navbar navbar-expand px-3 py-2">
+			<div class="d-flex align-items-center">
+				<i class="fas fa-bars me-3" id="sidebarToggle"></i>
+				<h5 class="mb-0">Quản lý sản phẩm</h5>
+			</div>
+			<div class="navbar-nav ms-auto">
+				<div class="dropdown">
+					<a href="#" class="nav-link dropdown-toggle"
+						data-bs-toggle="dropdown"> <i class="fas fa-user-circle me-1"></i>
+						Admin
+					</a>
+					<ul class="dropdown-menu dropdown-menu-end">
+						<li><a class="dropdown-item" href="#"><i
+								class="fas fa-user me-2"></i> Profile</a></li>
+						<li><a class="dropdown-item" href="#"><i
+								class="fas fa-cog me-2"></i> Settings</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" href="#"><i
+								class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- Main Content -->
+		<div class="card-admin card">
+		    <div class="card-body">
+				<h2 class="mb-4" th:if="${productEdit.id == null}">
+					<i class="fas fa-plus me-2"></i>Thêm Sản Phẩm Mới
+				</h2>
+				<h2 class="mb-4" th:if="${productEdit.id != null}">
+					<i class="fas fa-plus me-2"></i>Cập nhật sản phẩm
+				</h2>
+				<form th:object="${productEdit}" method="POST"
+					enctype="multipart/form-data" id="productForm">
+					<div class="mb-3">
+						<label class="form-label">Tên sản phẩm</label> <input
+							type="text" th:value="${productEdit.name}" class="form-control"
+							id="name" name="name" placeholder="Nhập tên sản phẩm" required>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Danh mục</label>
+						<select
+							th:value="${productEdit.category}" class="form-select" id="category" name="category"
+							required>
+							<option value="">-- Chọn danh mục --</option>
+							<option th:each="item : ${categoryType}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.value == productEdit.category}"></option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Giá bán (VNĐ)</label> <input
+							type="number" th:value="${productEdit.price}" class="form-control"
+							id="price" name="price" placeholder="Nhập giá sản phẩm" min="0" required>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Giá khuyến mãi (VNĐ)</label> <input
+							type="number" th:value="${productEdit.discountPrice}" class="form-control"
+							id="discountPrice" name="discountPrice" placeholder="Nhập giá sản phẩm" min="0" required>
+					</div>
+					
+					<div class="mb-3">
+						<label class="form-label">Số lượng</label> <input
+							type="number" th:value="${productEdit.stockQuantity}"
+							class="form-control" id="stockQuantity" name="stockQuantity" placeholder="Nhập số lượng"
+							min="0" required>
+					</div>
+					
+					<div class="mb-3">
+						<label class="form-label">Trọng lượng</label> <input
+							type="number" th:value="${productEdit.weight}"
+							class="form-control" id="weight" name="weight" placeholder="Nhập trọng lượng"
+							min="0" required>
+					</div>
+					
+					<div class="mb-3">
+						<label class="form-label">Hương vị</label> <input
+							type="text" th:value="${productEdit.flavor}"
+							class="form-control" id="flavor" name="flavor" placeholder="Loại hương vị"
+							min="0" required>
+					</div>
+					
+					<div class="mb-3">
+						<label class="form-label">Nhãn hàng</label> <input
+							type="text" th:value="${productEdit.brand}"
+							class="form-control" id="brand" name="brand" placeholder="Nhập nhãn hàng"
+							min="0" required>
+					</div>
+					
+					<div class="mb-3">
+						<label class="form-label">Mô tả</label>
+						<textarea name="description" th:text="${productEdit.description}" class="form-control"
+							id="description" rows="3" placeholder="Nhập mô tả sản phẩm"></textarea>
+					</div>
+
+					<div class="mb-3">
+						<label for="imageUrl" class="form-label">Hình ảnh sản phẩm</label>
+
+						<!-- Upload file -->
+						<input type="file" class="form-control" id="imageUrl"
+							name="imageUrl" accept="image/*">
+
+						<!-- Ảnh hiện tại -->
+						
+						<div class="mt-2" th:if="${productEdit.id != null}">
+							<label class="form-label d-block">Ảnh hiện tại:</label> <img
+								th:src="@{'/images/' + ${productEdit.imageUrl}}"
+								alt="Ảnh sản phẩm" class="img-thumbnail rounded border"
+								style="max-width: 150px; height: auto;">
+						</div>
+					</div>
+
+					<div class="d-flex justify-content-between">
+						<button type="submit" class="btn btn-primary" th:if="${productEdit.id == null}" id="btnAddOrUpdateProduct">
+							<i class="fas fa-save me-1"></i> Thêm sản phẩm
+						</button>
+						<button type="submit" class="btn btn-primary" th:if="${productEdit.id != null}" id="btnAddOrUpdateProduct">
+							<i class="fas fa-save me-1"></i> Cập nhật sản phẩm
+						</button>
+						<a href="/admin/product-list" class="btn btn-secondary"> <i
+							class="fas fa-times me-1"></i> Hủy thao tác
+						</a>
+					</div>
+					<input type="hidden" id="productId" name="id" th:value="${productEdit.id}"/>
+				</form>
+			</div>
+		</div>
+	</div>
+    <!-- Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="js/jquery-3.7.1.min.js"></script>
+	
+	
+	<script>
+	      function addOrUpdateProduct(formData){
+	    	  var productId = document.getElementById('productId').value;//lấy giá trị của id ẩn trong hidden
+	    	  $.ajax({
+	    		  url: '/admin/product/edit',
+	    		  type: 'POST',
+	    		  data:  formData,     <!--JSON.stringify(data), stringify chỉ lấy input dạng text-->
+	    	      processData: false,
+	    		  contentType: false,
+	    		  success: function(response) {
+	    			if (productId === "") {
+	    				 alert("Thêm sản phẩm thành công");
+	    				 document.getElementById('productForm').reset();//reset form sau khi thêm
+	    			} else {
+	    				 alert("Cập nhật sản phẩm thành công");
+	    			}    			  
+	    		  }
+	    	  });
+	      }
+	      
+	      $('#btnAddOrUpdateProduct').click(function(e){
+	    	  e.preventDefault();
+	    	  var data = $('#productForm')[0];
+	    	  var formData = new FormData(data);
+	    	  addOrUpdateProduct(formData);
+	      })
+	</script>
+	
+</body>
+</html>

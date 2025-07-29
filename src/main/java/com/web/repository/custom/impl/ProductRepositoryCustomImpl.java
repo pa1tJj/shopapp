@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.web.entity.ProductEntity;
+import com.web.model.dto.ProductDTO;
 import com.web.model.request.ProductRequest;
+import com.web.model.request.ProductSearchRequest;
 import com.web.repository.custom.ProductRepositoryCustom;
 
 import jakarta.persistence.EntityManager;
@@ -74,6 +76,27 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom{
 		queryNormal(productRequest, where);
 		querySpecial(productRequest, where);
 		sql.append(where);
+		Query query = entityManager.createNativeQuery(sql.toString(), ProductEntity.class);
+		return query.getResultList();
+	}
+
+	@Override
+	public List<ProductEntity> findProducts(ProductSearchRequest productSearchRequest) {
+		StringBuilder sql = new StringBuilder("SELECT *FROM product p WHERE 1 = 1");
+		if(productSearchRequest.getCategoryName() == null || productSearchRequest.getNameProduct() == null || productSearchRequest.getPriceSort() == null) {
+			sql.append(" ");
+		}
+		if(productSearchRequest.getPriceSort() != null && productSearchRequest.getPriceSort().contains("ASC")) {
+			sql.append(" ORDER BY p.price ");
+		} else if (productSearchRequest.getPriceSort() != null && productSearchRequest.getPriceSort().contains("DESC")) {
+			sql.append(" ORDER BY p.price DESC");
+		}
+		if(productSearchRequest.getNameProduct() != null && !productSearchRequest.getNameProduct().equals("")) {
+			sql.append(" AND p.name LIKE '%" + productSearchRequest.getNameProduct() +"%'");
+		}
+		if(productSearchRequest.getCategoryName() != null && !productSearchRequest.getCategoryName().equals("")) {
+			sql.append(" AND p.category LIKE '%" + productSearchRequest.getCategoryName() +"%'");
+		}
 		Query query = entityManager.createNativeQuery(sql.toString(), ProductEntity.class);
 		return query.getResultList();
 	}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Mooncake</title>
+    <title>Admin - Phan Lt</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -13,57 +13,12 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header p-3 text-center">
-            <h4><i class="fas fa-moon me-2"></i> Admin</h4>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="active">
-                <a href="#"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
-            </li>
-            <li>
-                <a th:href="@{/admin/product-list}"><i class="fas fa-box me-2"></i> Quản lý sản phẩm</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-receipt me-2"></i> Đơn hàng</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-users me-2"></i> Khách hàng</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-chart-bar me-2"></i> Thống kê</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-tags me-2"></i> Khuyến mãi</a>
-            </li>
-            <li>
-                <a href="#"><i class="fas fa-cog me-2"></i> Cài đặt</a>
-            </li>
-        </ul>
-    </div>
+    <div th:insert="admin/menu :: menuAdminShop"></div>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Topbar -->
-        <nav class="topbar navbar navbar-expand px-3 py-2">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-bars me-3" id="sidebarToggle"></i>
-                <h5 class="mb-0">Dashboard</h5>
-            </div>
-            <div class="navbar-nav ms-auto">
-                <div class="dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="fas fa-user-circle me-1"></i> Admin
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <div th:insert="admin/header :: headerAdminShop"></div>
 
         <!-- Page Content -->
         <div class="container-fluid p-4">

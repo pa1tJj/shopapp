@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.web.converter.ProductConverter;
 import com.web.entity.ProductEntity;
+import com.web.model.dto.ProductDTO;
 import com.web.model.request.ProductRequest;
+import com.web.model.request.ProductSearchRequest;
 import com.web.model.response.ProductResponse;
 import com.web.repository.ProductRepository;
 import com.web.service.ProductService;
@@ -43,7 +45,7 @@ public class ProductServiceImpl implements ProductService{
 	
 	private static final Path CURRENT_FOLDER = Paths.get("src/main/resources");
 
-	public String updateImage(ProductRequest productRequest) {
+	public String updateImage(ProductDTO productDTO) {
 		Path staticPath = Paths.get("static");
 		Path imagePath = Paths.get("images");
 		if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
@@ -54,12 +56,60 @@ public class ProductServiceImpl implements ProductService{
 			}
 		}
 		Path file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
-				.resolve(productRequest.getImage().getOriginalFilename());
+				.resolve(productDTO.getImageUrl().getOriginalFilename());
 		try (OutputStream os = Files.newOutputStream(file)) {
-			os.write(productRequest.getImage().getBytes());
+			os.write(productDTO.getImageUrl().getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return productRequest.getImage().getOriginalFilename().toString();
+		return productDTO.getImageUrl().getOriginalFilename().toString();
+	}
+	
+	public ProductResponse findById(Long id) {
+		ProductEntity productEntity = productRepository.findById(id).get();
+		ProductResponse productResponse = productConverter.converterToProductResponse(productEntity);
+		return productResponse;
+	}
+	
+	private static final Path IMAGE_UPLOAD_DIR = Paths.get("uploads/images");
+	public String saveThumbnail(ProductDTO productDTO) {
+		try {
+			if (!Files.exists(IMAGE_UPLOAD_DIR)) {
+				Files.createDirectories(IMAGE_UPLOAD_DIR);
+			}
+			String originalFileName = productDTO.getImageUrl().getOriginalFilename();
+			Path imagePath = IMAGE_UPLOAD_DIR.resolve(originalFileName);
+			try (OutputStream os = Files.newOutputStream(imagePath)) {
+	            os.write(productDTO.getImageUrl().getBytes());
+	        }
+			return originalFileName;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ProductDTO addOrUpdateProduct(ProductDTO productDTO) {
+		ProductEntity productEntity = productConverter.converterToProductEntity(productDTO);
+		productEntity.setImageUrl(saveThumbnail(productDTO));
+		productRepository.save(productEntity);
+		return productConverter.converterToProductDTO(productEntity);
+	}
+
+	@Override
+	public void deleteProducts(List<Long> ids) {
+		productRepository.deleteByIdIn(ids);
+	}
+
+	@Override
+	public List<ProductResponse> findProducts(ProductSearchRequest productSearchRequest) {
+		List<ProductEntity> productEntities = productRepository.findProducts(productSearchRequest);
+		List<ProductResponse> result = new ArrayList<>();
+		for(ProductEntity item : productEntities) {
+			ProductResponse productResponse = productConverter.converterToProductResponse(item);
+			result.add(productResponse);
+		}
+		return result;
 	}
 }

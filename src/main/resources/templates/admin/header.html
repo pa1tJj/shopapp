@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<nav class="topbar navbar navbar-expand px-3 py-2" th:fragment="headerAdminShop">
+	<div class="d-flex align-items-center">
+		<i class="fas fa-bars me-3" id="sidebarToggle"></i>
+		<h5 class="mb-0">Dashboard</h5>
+	</div>
+	<div class="navbar-nav ms-auto">
+		<div class="dropdown">
+			<a href="#" class="nav-link dropdown-toggle"
+				data-bs-toggle="dropdown"> <i class="fas fa-user-circle me-1" ></i>
+				<span th:text="${username}"></span>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-end">
+				<li><a class="dropdown-item" href="#"><i
+						class="fas fa-user me-2"></i> Profile</a></li>
+				<li><a class="dropdown-item" href="#"><i
+						class="fas fa-cog me-2"></i> Settings</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" th:href="@{/logout}"><i
+						class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+</html>
