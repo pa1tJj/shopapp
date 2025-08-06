@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -61,10 +63,10 @@ public class ProductEntity extends BaseEntity{
 	@Column(name = "is_featured")
 	private Boolean isFeatured;
 	
-	@ManyToMany(mappedBy = "product")
-	private List<OrderEntity> orders = new ArrayList<>();
+	@OneToMany(mappedBy = "product", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    private List<CartProductEntity> cartItems = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-	private List<CartEntity> cart = new ArrayList<>();
+	@OneToMany(mappedBy = "product")
+	private List<OrderDeatail> orderDeatails = new ArrayList<>();
 	
 }

@@ -28,7 +28,7 @@ public class CustomUserDetailService implements UserDetailsService{
 		for (RoleEntity roleEntity : userEntity.getRoles()) {
 			 authorities.add(new SimpleGrantedAuthority("ROLE_" + roleEntity.getCode()));
 		}
-		return new MyUserDetails(userEntity.getUserName(), userEntity.getPassword(), userEntity.getFullName(), true, true, true, true, authorities);
+		return new MyUserDetails(userEntity.getUserName(), userEntity.getPassword(), userEntity.getFullName(), userEntity.getId(), true, true, true, true, authorities);
 	}
 
 }

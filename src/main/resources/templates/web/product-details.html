@@ -49,22 +49,22 @@
 					<strong>HSD:</strong> 30 ngày kể từ ngày sản xuất
 				</p>
 
-				<form method="GET" th:action="@{/cart}" th:object="${cart}" id="formAddToCart">
+				<form method="GET" th:action="@{/cart}" th:object="${request}">
 					<div class="mb-3">
 						<label for="quantity" class="form-label">Số lượng:</label> <input
 							type="number" class="form-control w-25" id="quantity"
 							name="quantity" value="1" min="1">
 					</div>
 					
-					<input type="hidden" name="productId" id="productId" />
-					<input type="hidden" th:object="${userLogin}" name="userId" id="userId" />
+					<input type="hidden" name="productId" id="productId" th:value="${productDetails.id}">
+					<input type="hidden" name="userId" id="userId" th:value="${userId}">
 					<div class="d-flex gap-2">
 						<button type="submit" name="addCart" id="btnAddToCart"
 							class="btn btn-primary">
 							<i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ hàng
 						</button>
 
-						<button type="submit" name="" class="btn btn-danger">
+						<button type="submit" name="" class="btn btn-danger" id="orderProduct"> 
 							<i class="fas fa-bolt me-1"></i> Mua ngay
 						</button>
 					</div>
@@ -84,13 +84,12 @@
 	<script src="js/jquery-3.7.1.min.js"></script>
 	
 	<script>
-		  function addProductToCart(formData) {
+		  function addProductToCart(data) {
 			  $.ajax({
 				  url: "/add-to-cart",
-				  method: "POST",
-				  data: formData,
-				  processData: false, 
-				  contentType: false,
+				  type: "POST",
+				  data: JSON.stringify(data),
+				  contentType: "application/JSON",  
 				  success: function(res){
 					  alert("Thêm thành công vào giỏ hàng");
 				  },
@@ -108,6 +107,7 @@
 			  e.preventDefault();
 			  var data = {};	    	
 			  data['productId'] = $('#productId').val();
+			  data['quantity'] = $('#quantity').val();
 			  data['userId'] = $('#userId').val();
 			  addProductToCart(data);
 		  })

@@ -28,6 +28,7 @@ public class ShopController {
 		mav.addObject("isLoggedIn", isLoggedIn);
 		if(isLoggedIn) {
 			mav.addObject("fullName", SecurityUtil.getPrincipal().getFullName());
+		    mav.addObject("userId", SecurityUtil.getPrincipal().getId());
 		}
 		return mav;
 	}

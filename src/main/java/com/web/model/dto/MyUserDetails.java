@@ -9,9 +9,10 @@ public class MyUserDetails extends User {
 	private Long id;
 	private String fullName;
 
-	public MyUserDetails(String username, String password, String fullName, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+	public MyUserDetails(String username, String password, String fullName, Long id, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.fullName = fullName;
+        this.id = id;
     }
 
 	public Long getId() {

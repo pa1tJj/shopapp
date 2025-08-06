@@ -27,8 +27,9 @@ public class SecurityConfiguration {
 		http.csrf(AbstractHttpConfigurer::disable)
 		.authorizeHttpRequests( auth -> auth
 				.requestMatchers("/admin/**", "/admin-home").hasRole("ADMIN")
+				.requestMatchers("/cart-*", "/order-payment").hasRole("USER")
 				.requestMatchers("/assets/**", "/css/**", "/js/**", "/images/**").permitAll()
-				.requestMatchers("/login", "/register", "/shop", "/register-acc", "/products-list", "/products-list/**", "/products-search", "/products-search/**", "/products-detail-*", "/add-to-cart", "/cart").permitAll()
+				.requestMatchers("/login", "/register", "/shop", "/register-acc", "/products-list", "/products-list/**", "/products-search", "/products-search/**", "/products-detail-*", "/add-to-cart", "/cart-delete").permitAll()
 				.anyRequest().authenticated()
 				)
 		.requestCache(cache -> cache

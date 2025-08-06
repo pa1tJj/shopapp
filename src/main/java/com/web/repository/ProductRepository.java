@@ -9,4 +9,5 @@ import com.web.repository.custom.ProductRepositoryCustom;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long>, ProductRepositoryCustom{
 	void deleteByIdIn(List<Long> ids);
+	List<ProductEntity> findByIdIn(List<Long> ids);
 }

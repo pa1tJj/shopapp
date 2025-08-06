@@ -51,12 +51,13 @@
 
 					<!-- Giỏ hàng -->
 					<div>
-						<a th:href="@{/cart}"
+						<a th:href="@{'/cart-' + ${userId}}"
 							class="btn btn-outline-light position-relative"> <i
 							class="fas fa-shopping-cart"></i> <span
 							class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
 								3 <!-- hoặc: th:text="${cartItemCount}" -->
 						</span>
+						<input type="hidden" name="userId" id="userId" th:value="${userId}">					
 						</a>
 					</div>
 				</div>
