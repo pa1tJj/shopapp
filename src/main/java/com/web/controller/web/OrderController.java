@@ -1,55 +1,46 @@
 package com.web.controller.web;
 
-import java.util.List;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.web.model.dto.OrderDTO;
-import com.web.model.dto.PriceDTO;
 import com.web.security.util.SecurityUtil;
-import com.web.service.web.CartService;
+import com.web.service.web.OrderService;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-public class CartProductController {
-	private CartService cartService;
+public class OrderController {
+	private OrderService orderService;
 
-	@GetMapping("/cart-{id}")
-	public ModelAndView getCart(@PathVariable Long id) {
-		ModelAndView mav = new ModelAndView("web/cart");
+	@GetMapping("/order-success-{id}")
+	public ModelAndView getOrderPlaced(@PathVariable Long id) {
+		ModelAndView mav = new ModelAndView("web/order_placed");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    boolean isLoggedIn = auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String);
 		mav.addObject("isLoggedIn", isLoggedIn);
 		if(isLoggedIn) {
 			mav.addObject("fullName", SecurityUtil.getPrincipal().getFullName());
-			mav.addObject("cartDetails", cartService.getUserCartProducts(id));
-			mav.addObject("userId", id);
+		    mav.addObject("userId", SecurityUtil.getPrincipal().getId());
 		}
+		mav.addObject("orders", orderService.getOrdersByUser(id));
 		return mav;
 	}
 	
-	@GetMapping("/order-payment")
-	public ModelAndView getPayment(@RequestParam Long userId, @RequestParam List<Long> productId) {
-		ModelAndView mav = new ModelAndView("web/order_payment");
+	@GetMapping("/payment-success-{id}")
+	public ModelAndView getPaymentSuccess(@PathVariable Long id) {
+		ModelAndView mav = new ModelAndView("web/payment_success");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    boolean isLoggedIn = auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String);
 		mav.addObject("isLoggedIn", isLoggedIn);
 		if(isLoggedIn) {
-			mav.addObject("fullName", SecurityUtil.getPrincipal().getFullName());
-			mav.addObject("userId", userId);
+			mav.addObject("userId", SecurityUtil.getPrincipal().getId());
 		}
-		mav.addObject("product", cartService.findProductOrder(userId, productId));
-		mav.addObject("priceAll", PriceDTO.priceAll);
-		mav.addObject("pricePayment", PriceDTO.pricePayment);
-		mav.addObject("orders", new OrderDTO());
+		mav.addObject("payment", orderService.getResponse(id));
 		return mav;
 	}
 }

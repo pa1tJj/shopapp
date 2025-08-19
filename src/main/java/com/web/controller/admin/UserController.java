@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.web.enums.DistrictType;
-import com.web.model.dto.UserDTO;
 import com.web.model.request.UserRequest;
 import com.web.service.UserService;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller

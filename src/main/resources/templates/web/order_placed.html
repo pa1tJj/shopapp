@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đơn hàng của tôi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+  <style>
+    body { background:#f6f8fb; }
+    .order-card{ border:0; border-radius:1rem; box-shadow:0 6px 20px rgba(0,0,0,.05); transition:.2s; }
+    .order-card:hover{ transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.08);} 
+    .badge-soft{ background:rgba(0,0,0,.05); color:#333; }
+  </style>
+</head>
+<body>
+<div th:insert="~{web/fragments/header :: headerShop}"></div>
+  <div class="container py-5">
+    <h1 class="mb-4 h3"><i class="fa-solid fa-receipt me-2 text-primary"></i>Đơn hàng của tôi</h1>
+
+    <!-- Lặp qua danh sách đơn hàng -->
+    <div class="row g-4" th:if="${orders != null}" th:each="order : ${orders}">
+      <div class="col-12">
+        <div class="card order-card p-3 p-md-4">
+          <div class="d-flex justify-content-between flex-wrap align-items-center mb-3">
+            <div>
+              <h2 class="h6 mb-1">Mã đơn: ORD-<span th:text="${order.id}"></span></h2>
+              <div class="text-secondary small">Ngày đặt: <span th:text="${order.createdDate}"></span></div>
+            </div>
+            <div class="d-flex flex-column text-end">
+              <span class="badge text-bg-primary mb-1" th:text="${order.orderStatus}"></span>
+              <span class="badge badge-soft" th:text="${order.paymentMethod}"></span>
+            </div>
+          </div>
+
+          <!-- Sản phẩm trong đơn -->
+          <div class="vstack gap-3">
+            <div class="d-flex justify-content-between align-items-center" th:each="item : ${order.orderDetails}">
+              <div class="d-flex align-items-center">
+                <img th:src="@{'/images/' + ${item.productImage}}" alt="Ảnh sản phẩm" class="rounded me-3" style="width:60px;height:60px;object-fit:cover;" />
+                <div>
+                  <div class="fw-medium" ><span th:text="${item.productName}"></span></div>
+                  <div class="text-secondary small">SL: <span th:text="${item.quantity}">1</span> × <span th:text="${item.unitPrice}"></span>₫</div>
+                </div>
+              </div>
+              <div class="fw-semibold"><span th:text="${item.subTotal}"></span>₫</div>
+            </div>
+          </div>
+
+          <div class="divider my-3" style="height:1px;background:rgba(0,0,0,.08);"></div>
+
+          <div class="d-flex justify-content-between fs-6">
+            <span>Tổng cộng</span>
+            <strong class="text-success"><span >0</span>₫</strong>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <a class="btn btn-sm btn-outline-primary" >
+              <i class="fa-solid fa-eye me-1"></i> Xem chi tiết
+            </a>
+            <a class="btn btn-sm btn-primary" >
+              <i class="fa-solid fa-file-arrow-down me-1"></i> Tải hóa đơn
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nếu không có đơn hàng -->
+    <div class="text-center py-5 text-secondary" th:if="${orders == null}">
+      <i class="fa-regular fa-face-frown mb-3" style="font-size:2rem;"></i>
+      <p>Bạn chưa có đơn hàng nào.</p>
+      <a class="btn btn-primary" href="/" role="button"><i class="fa-solid fa-bag-shopping me-2"></i>Tiếp tục mua sắm</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

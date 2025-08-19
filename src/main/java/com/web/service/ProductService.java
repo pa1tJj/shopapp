@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 import com.web.model.dto.ProductDTO;
-import com.web.model.dto.ResponseDTO;
 import com.web.model.request.ProductRequest;
 import com.web.model.request.ProductSearchRequest;
 import com.web.model.response.ProductResponse;

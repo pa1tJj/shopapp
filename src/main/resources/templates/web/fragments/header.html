@@ -41,7 +41,7 @@
 							aria-labelledby="userDropdown">
 							<li><a class="dropdown-item" th:href="@{/profile}">Tài
 									khoản của tôi</a></li>
-							<li><a class="dropdown-item" th:href="@{/orders}">Đơn
+							<li><a class="dropdown-item" th:href="@{/order-success-{id}(id=${userId})}">Đơn
 									hàng</a></li>
 							<li><hr class="dropdown-divider"></li>
 							<li><a class="dropdown-item" th:href="@{/logout}">Đăng

@@ -3,14 +3,10 @@ package com.web.repository.custom.impl;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.web.converter.UserConverter;
 import com.web.entity.UserEntity;
-import com.web.model.dto.UserDTO;
 import com.web.model.request.UserRequest;
-import com.web.repository.UserRepository;
 import com.web.repository.custom.UserRepositoryCustom;
 
 import jakarta.persistence.EntityManager;

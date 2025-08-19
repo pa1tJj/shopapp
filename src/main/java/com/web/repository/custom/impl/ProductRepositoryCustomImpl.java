@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.web.entity.ProductEntity;
-import com.web.model.dto.ProductDTO;
 import com.web.model.request.ProductRequest;
 import com.web.model.request.ProductSearchRequest;
 import com.web.repository.custom.ProductRepositoryCustom;

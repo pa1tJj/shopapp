@@ -9,14 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -66,7 +60,7 @@ public class ProductEntity extends BaseEntity{
 	@OneToMany(mappedBy = "product", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<CartProductEntity> cartItems = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "product")
-	private List<OrderDeatail> orderDeatails = new ArrayList<>();
+	@OneToMany(mappedBy = "product", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+	private List<OrderDetail> orderDeatails = new ArrayList<>();
 	
 }

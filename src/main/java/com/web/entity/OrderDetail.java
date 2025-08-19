@@ -7,14 +7,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "order_detail")
-public class OrderDeatail {
+public class OrderDetail {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +33,6 @@ public class OrderDeatail {
 	private OrderEntity order;
 	
 	@ManyToOne
-	@JoinColumn(name = "produict_id")
+	@JoinColumn(name = "product_id")
 	private ProductEntity product;
 }

@@ -9,7 +9,7 @@ import com.web.entity.CartEntity;
 import com.web.model.request.CartRequest;
 
 @Component
-public class OrderProductConverter {
+public class CartProductConverter {
 	@Autowired
 	private ModelMapper mapper;
 	

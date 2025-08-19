@@ -8,20 +8,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.web.model.dto.OrderDTO;
+import com.web.model.dto.PaymentDTO;
 import com.web.model.request.CartRequest;
 import com.web.model.request.OrderRequest;
+import com.web.model.request.PaymentRequest;
 import com.web.service.web.CartService;
+import com.web.service.web.OrderService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
-@RestController
+@Controller
 @AllArgsConstructor
 public class CartProductAPI {
 	private CartService cartService;
+	private OrderService orderService;
+	
 	@PostMapping("/add-to-cart")
     public ResponseEntity<String> orderProducts(@RequestBody CartRequest cartRequest) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -45,6 +53,20 @@ public class CartProductAPI {
 		Map<String, Object> response = new HashMap<>();
 	    response.put("totalAmount", total);
 		return ResponseEntity.ok(response);
+	}
+	
+	@PostMapping("/orders")
+	public ResponseEntity<?> getOrder(@ModelAttribute OrderDTO orderDTO, HttpServletResponse response) {
+		orderService.getPlaceOrder(orderDTO);
+		PaymentRequest.userId = orderDTO.getUserId();
+		if (orderDTO.getPaymentMethod().equals("cod")) {
+			PaymentDTO paymentDTO = new PaymentDTO();
+			paymentDTO.setMessage("cod");
+			paymentDTO.setUrl("/payment-success-" + orderDTO.getUserId());	
+		    return ResponseEntity.ok(paymentDTO);		
+		} else  {
+			return ResponseEntity.ok(null);
+		}		
 	}
 }
 	

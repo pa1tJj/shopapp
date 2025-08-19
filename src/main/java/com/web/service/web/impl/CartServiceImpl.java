@@ -13,8 +13,10 @@ import com.web.entity.CartProductEntity;
 import com.web.entity.ProductEntity;
 import com.web.entity.UserEntity;
 import com.web.model.dto.CartProductDTO;
+import com.web.model.dto.PriceDTO;
 import com.web.model.request.CartRequest;
 import com.web.model.request.OrderRequest;
+import com.web.model.response.OrderResponse;
 import com.web.repository.ProductRepository;
 import com.web.repository.UserRepository;
 import com.web.repository.web.CartProductRepository;
@@ -99,14 +101,25 @@ public class CartServiceImpl implements CartService{
 		CartEntity cartEntity = cartRepository.findByUserId(userId);
 		List<ProductEntity> productEntities = productRepository.findByIdIn(productId);
 		List<CartProductDTO> result = new ArrayList<>();
+		Long price = 0L;
+		Long total = 0L;
+		List<ProductEntity> entities = new ArrayList<ProductEntity>();
 		for(ProductEntity item : productEntities) {
 			CartProductDTO cartProductDTO = new CartProductDTO();
 			Optional<CartProductEntity> existingProduct = cartProductRepository.findByCartAndProduct(cartEntity, item);
 			cartProductDTO.setProductEntity(item);
 			cartProductDTO.setQuantity(existingProduct.get().getQuantity());
+			price += cartProductDTO.getQuantity() * item.getPrice();
 			cartProductDTO.setPriceTotal(NumberFormat.getNumberInstance(Locale.US).format(cartProductDTO.getQuantity() * item.getPrice()).replace(",", ".") + "đ");
+			PriceDTO.priceAll = NumberFormat.getNumberInstance(Locale.US).format(price).replace(",", ".") + "đ";
+			PriceDTO.pricePayment = (NumberFormat.getNumberInstance(Locale.US).format(price + 20000).replace(",", ".") + "đ");	
+			PriceDTO.totalPayment = price + 20000;
+			entities.add(item);
+			total += cartProductDTO.getQuantity();
 			result.add(cartProductDTO);
 		}
+		OrderResponse.productEntities = entities;
+		OrderResponse.totalQuantity = total;
 		return result;
 	}
 

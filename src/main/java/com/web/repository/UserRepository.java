@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.web.entity.RoleEntity;
 import com.web.entity.UserEntity;
 import com.web.repository.custom.UserRepositoryCustom;
 

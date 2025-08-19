@@ -21,24 +21,29 @@
 			<div id="map" style="height: 350px; border: 1px solid #ccc; border-radius: 6px;"></div>
 		</div>
 		<div class="checkout-container">
-			<form method="POST" th:action="@{/order}" id="formOrder">
+			<form method="POST" id="formOrder" th:object="${orders}" >
 				<!-- 1. Thông tin người nhận -->
 				<div class="mb-4">
 					<div class="section-title">📍 Thông tin nhận hàng</div>
 					<div class="row g-3">
 						<div class="col-md-6">
-							<label for="fullName" class="form-label">Họ tên</label> <input
-								type="text" class="form-control" id="recipientName" name="recipientName"
-								required />
+							<label for="fullName" class="form-label">Họ tên người nhận</label> <input
+								type="text" class="form-control" id="recipentName" name="recipentName"
+								required th:value="${orders.recipentName}"/>
 						</div>
 						<div class="col-md-6">
 							<label for="phone" class="form-label">Số điện thoại</label> <input
-								type="tel" class="form-control" id="recipientPhone" name="recipientPhone" required />
+								type="tel" class="form-control" id="recipentPhone" name="recipentPhone" required th:value="${orders.recipentPhone}"/>
 						</div>
 						<div class="col-12">
 							<label for="address" class="form-label">Địa chỉ nhận hàng</label>
-							<textarea class="form-control" id="address" name="address"
+							<textarea class="form-control" id="shippingAddress" name="shippingAddress" th:field="*{shippingAddress}"
 								rows="2" required></textarea>
+						</div>
+						<div class="col-12">
+							<label for="note" class="form-label">📝 Ghi nhớ / Ghi chú</label>
+							<textarea class="form-control" id="notes" name="notes" rows="2"
+								placeholder="Ví dụ: Gọi trước khi giao, giao buổi sáng..." th:field="*{notes}"></textarea>
 						</div>
 					</div>
 				</div>
@@ -79,50 +84,62 @@
 				<!-- 3. Phương thức thanh toán -->
 				<div class="container mt-4">
 					<h4>Phương thức thanh toán</h4>
-					<form>
-						<!-- Chọn loại thanh toán -->
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod"
-								id="paymentCod" value="cod" checked> <label
-								class="form-check-label" for="paymentCod"> Thanh toán
-								khi nhận hàng (COD) </label>
-						</div>
+					<!-- Chọn loại thanh toán -->
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="paymentMethod"
+							id="paymentCod" value="cod" checked> <label
+							class="form-check-label" for="paymentCod"> Thanh toán khi
+							nhận hàng (COD) </label>
+					</div>
 
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod"
-								id="paymentOnline" value="online"> <label
-								class="form-check-label" for="paymentOnline"> Thanh toán
-								online </label>
-						</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="paymentMethod"
+							id="paymentOnline" value="online"> <label
+							class="form-check-label" for="paymentOnline"> Thanh toán
+							online thông qua VNPay</label>
+					</div>
 
-						<!-- Nếu chọn Online thì hiện thêm các phương thức con -->
-						<div id="onlineOptions" class="mt-3" style="display: none;">
-							<h5>Phương thức online</h5>
-							<div class="form-check ms-3">
-								<input class="form-check-input" type="radio" name="onlineOption"
-									id="qrCode" value="qr"> <label class="form-check-label"
-									for="qrCode"> Thanh toán bằng mã QR </label>
-							</div>
-							<div class="form-check ms-3">
-								<input class="form-check-input" type="radio" name="onlineOption"
-									id="vnpay" value="vnpay"> <label
-									class="form-check-label" for="vnpay"> VNPAY </label>
-							</div>
+					<!-- Nếu chọn Online thì hiện thêm các phương thức con 
+					<div id="onlineOptions" class="mt-3" style="display: none;">
+						<h5>Phương thức online</h5>
+						<div class="form-check ms-3">
+							<input class="form-check-input" type="radio" name="onlineOption"
+								id="qrCode" value="qr"> <label class="form-check-label"
+								for="qrCode"> Thanh toán bằng mã QR </label>
 						</div>
-					</form>
+						<div class="form-check ms-3">
+							<input class="form-check-input" type="radio" name="onlineOption"
+								id="vnpay" value="vnpay"> <label
+								class="form-check-label" for="vnpay"> VNPAY </label>
+						</div>
+					</div>-->
 				</div>
 
 				<!-- 4. Tổng tiền và Đặt hàng -->
-				<div class="row align-items-center">
-					<div class="col-md-6">
-						<span class="fs-6">Phí vận chuyển: </span><span class="fw-bold">20,000
-							đ</span><br /> <span class="fs-5">Tổng thanh toán: </span> <span
-							class="total-price"></span>
+				<div class="checkout-summary p-3 border rounded mt-4">
+					<div class="d-flex justify-content-between mb-2">
+						<span class="fs-6">Tổng tiền hàng:</span> <span
+							class="fw-bold text-danger" th:text="${priceAll}"></span>
 					</div>
-					<div class="col-md-6 text-end">
-						<button class="btn btn-order" type="submit">🛍 Đặt hàng</button>
+					<div class="d-flex justify-content-between mb-2">
+						<span class="fs-6">Phí vận chuyển:</span> <span class="fw-bold"
+							>20.000₫</span>
+					</div>
+					<div class="d-flex justify-content-between border-top pt-2 mb-3">
+						<span class="fs-5" >Tổng thanh toán:</span > <span
+							th:text="${pricePayment}" class="fw-bold text-danger fs-5"
+							></span>
+					</div>
+					<div class="text-muted small mb-3">
+						Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <a
+							href="/terms" target="_blank">Điều khoản</a> của chúng tôi.
+					</div>
+					<div class="text-end">
+						<button class="btn btn-order px-4" type="submit" id="btnOrder">🛍 Đặt
+							hàng</button>
 					</div>
 				</div>
+				<input type="hidden" name="userId" th:value="${userId}"/>
 			</form>
 		</div>
 	</div>
@@ -150,6 +167,52 @@
 	            }
 	        });
 	    });
+		
+		//đặt hàng
+		function getOrder(formData) {
+			$.ajax({
+				url:'/orders',
+				type:'POST',
+				data:  formData,     <!--JSON.stringify(data), stringify chỉ lấy input dạng text-->
+	    	    processData: false,
+	    		contentType: false,
+	    		success: function(response) {  
+	    			if(response.message === "cod") {
+	    				window.location.href = response.url;
+	    			}
+	    			
+	    		}
+			});
+		}
+		
+		$('#btnOrder').click(function(e){
+			e.preventDefault();
+			var data = $('#formOrder')[0];
+	    	var formData = new FormData(data);
+	    	var paymentMethod = $('input[name="paymentMethod"]:checked').val();
+			getOrder(formData);
+
+			if (paymentMethod === 'online') {
+				// Nếu là online thì gọi sang API create-payment
+				$.ajax({
+					url: '/create_payment',
+					type: 'GET',
+					data: Object.fromEntries(formData), // chuyển FormData sang object
+					success: function (response) {
+						// Backend trả về link VNPay thì redirect sang đó
+						window.location.href = response.url;
+					}
+				});
+			} else {
+				// Nếu COD thì tạo order bình thường
+				getOrder(formData);
+			}
+		})
+		
+		function getPlaced() {
+			
+		}
+		
 	</script>
 </body>
 </html>
